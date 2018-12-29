@@ -111,13 +111,6 @@ EOF
 }
 
 function create_key() {
-  if [[ -z "$COINKEY" ]]; then
-  $COIN_DAEMON -daemon
-  sleep 30
-  if [ -z "$(ps axo cmd:100 | grep $COIN_DAEMON)" ]; then
-   echo -e "${RED}$COIN_NAME server couldn not start. Check /var/log/syslog for errors.{$NC}"
-   exit 1
-  fi
   COINKEY=$($COIN_CLI masternode genkey)
   if [ "$?" -gt "0" ];
     then
