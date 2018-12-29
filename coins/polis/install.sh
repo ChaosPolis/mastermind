@@ -119,7 +119,6 @@ function create_key() {
     COINKEY=$($COIN_CLI masternode genkey)
   fi
   $COIN_CLI stop
-fi
 clear
 }
 
