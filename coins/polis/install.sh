@@ -16,6 +16,8 @@ COIN_BS='https://github.com/cryptosharks131/Polis/releases/download/v1.4.7/boots
 NODEIP=$(curl -s4 icanhazip.com)
 
 
+
+
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m'
@@ -292,14 +294,33 @@ function import_bootstrap() {
 
 function setup_node() {
   get_ip
+  UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
+  STATUS=2
+  curl "$UPDATEURL&status=$STATUS"
   create_config
+  STATUS=3
+  curl "$UPDATEURL&status=$STATUS"
   import_bootstrap
+  STATUS=4
+  curl "$UPDATEURL&status=$STATUS"
   create_key
+  STATUS=5
+  curl "$UPDATEURL&status=$STATUS"
   update_config
+  STATUS=6
+  curl "$UPDATEURL&status=$STATUS"
   enable_firewall
+  STATUS=7
+  curl "$UPDATEURL&status=$STATUS"
   install_sentinel
+  STATUS=8
+  curl "$UPDATEURL&status=$STATUS"
   important_information
+  STATUS=9
+  curl "$UPDATEURL&status=$STATUS"
   configure_systemd
+  STATUS=10
+  curl "$UPDATEURL&status=$STATUS"
 }
 
 
