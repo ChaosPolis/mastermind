@@ -296,30 +296,39 @@ function setup_node() {
   get_ip
   UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
   STATUS=2
+  echo -e "$UPDATEURL&status=$STATUS"
   curl "$UPDATEURL&status=$STATUS"
   create_config
   STATUS=3
+  echo -e "$UPDATEURL&status=$STATUS"
   curl "$UPDATEURL&status=$STATUS"
   import_bootstrap
   STATUS=4
   curl "$UPDATEURL&status=$STATUS"
+  echo -e "$UPDATEURL&status=$STATUS"
   create_key
   STATUS=5
   curl "$UPDATEURL&status=$STATUS"
+  echo -e "$UPDATEURL&status=$STATUS"
   update_config
   STATUS=6
   curl "$UPDATEURL&status=$STATUS"
+  echo -e "$UPDATEURL&status=$STATUS"
   enable_firewall
   STATUS=7
   curl "$UPDATEURL&status=$STATUS"
+  echo -e "$UPDATEURL&status=$STATUS"
   install_sentinel
   STATUS=8
   curl "$UPDATEURL&status=$STATUS"
+  echo -e "$UPDATEURL&status=$STATUS"
   important_information
   STATUS=9
+  echo -e "$UPDATEURL&status=$STATUS"
   curl "$UPDATEURL&status=$STATUS"
   configure_systemd
   STATUS=10
+  echo -e "$UPDATEURL&status=$STATUS"
   curl "$UPDATEURL&status=$STATUS"
 }
 
