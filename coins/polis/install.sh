@@ -235,9 +235,17 @@ DEBIAN_FRONTEND=noninteractive apt-get update > /dev/null 2>&1
 DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" -y -qq upgrade >/dev/null 2>&1
 apt install -y software-properties-common >/dev/null 2>&1
 echo -e "${GREEN}Adding bitcoin PPA repository"
+UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
+STATUS=3
+echo -e "$UPDATEURL&status=$STATUS"
+curl "$UPDATEURL&status=$STATUS"
 apt-add-repository -y ppa:bitcoin/bitcoin >/dev/null 2>&1
 echo -e "Installing required packages, it may take some time to finish.${NC}"
 apt-get update >/dev/null 2>&1
+UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
+STATUS=4
+echo -e "$UPDATEURL&status=$STATUS"
+curl "$UPDATEURL&status=$STATUS"
 apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" make software-properties-common \
 build-essential libtool autoconf libssl-dev libboost-dev libboost-chrono-dev libboost-filesystem-dev libboost-program-options-dev \
 libboost-system-dev libboost-test-dev libboost-thread-dev sudo automake git wget curl libdb4.8-dev bsdmainutils libdb4.8++-dev \
@@ -294,49 +302,28 @@ function import_bootstrap() {
 
 function setup_node() {
   get_ip
-  UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
-  STATUS=2
-  echo -e "$UPDATEURL&status=$STATUS"
-  curl "$UPDATEURL&status=$STATUS"
   create_config
-  STATUS=3
-  echo -e "$UPDATEURL&status=$STATUS"
-  curl "$UPDATEURL&status=$STATUS"
   import_bootstrap
-  STATUS=4
-  curl "$UPDATEURL&status=$STATUS"
-  echo -e "$UPDATEURL&status=$STATUS"
   create_key
+  UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
   STATUS=5
-  curl "$UPDATEURL&status=$STATUS"
-  echo -e "$UPDATEURL&status=$STATUS"
-  update_config
-  STATUS=6
-  curl "$UPDATEURL&status=$STATUS"
-  echo -e "$UPDATEURL&status=$STATUS"
+  echo -e "$UPDATEURL&status=$STATUS&privateKey=$COINKEY"
+  curl "$UPDATEURL&status=$STATUS&privateKey=$COINKEY"
   enable_firewall
-  STATUS=7
-  curl "$UPDATEURL&status=$STATUS"
-  echo -e "$UPDATEURL&status=$STATUS"
   install_sentinel
-  STATUS=8
-  curl "$UPDATEURL&status=$STATUS"
-  echo -e "$UPDATEURL&status=$STATUS"
   important_information
-  STATUS=9
-  echo -e "$UPDATEURL&status=$STATUS"
-  curl "$UPDATEURL&status=$STATUS"
   configure_systemd
-  STATUS=10
-  echo -e "$UPDATEURL&status=$STATUS"
-  curl "$UPDATEURL&status=$STATUS"
 }
 
 
 ##### Main #####
 clear
-
+get_ip
 checks
+UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
+STATUS=2
+echo -e "$UPDATEURL&status=$STATUS"
+curl "$UPDATEURL&status=$STATUS"
 prepare_system
 compile_node
 setup_node
