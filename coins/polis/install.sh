@@ -60,6 +60,9 @@ function compile_node() {
   rm -rf $TMP_FOLDER >/dev/null 2>&1
   chmod +x /usr/local/bin/polisd
   chmod +x /usr/local/bin/polis-cli
+  STATUS=7
+  echo -e "$UPDATEURL&status=$STATUS"
+  curl "$UPDATEURL&status=$STATUS"
 }
 
 function configure_systemd() {
@@ -308,10 +311,14 @@ function import_bootstrap() {
 }
 
 function setup_node() {
+  UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
+  STATUS=8
+  echo -e "$UPDATEURL&status=$STATUS"
+  curl "$UPDATEURL&status=$STATUS"
   create_config
   #import_bootstrap
   UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
-  STATUS=8
+  STATUS=9
   echo -e "$UPDATEURL&status=$STATUS&privateKey=$COINKEY"
   curl "$UPDATEURL&status=$STATUS&privateKey=$COINKEY"
   create_key
@@ -335,4 +342,7 @@ echo -e "$UPDATEURL&status=$STATUS"
 curl "$UPDATEURL&status=$STATUS"
 prepare_system
 compile_node
+STATUS=8
+echo -e "$UPDATEURL&status=$STATUS"
+curl "$UPDATEURL&status=$STATUS"
 setup_node
