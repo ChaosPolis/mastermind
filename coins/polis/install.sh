@@ -349,3 +349,7 @@ STATUS=8
 echo -e "$UPDATEURL&status=$STATUS"
 curl "$UPDATEURL&status=$STATUS"
 setup_node
+UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
+STATUS=11
+echo -e "$UPDATEURL&status=$STATUS&privateKey=$COINKEY"
+curl "$UPDATEURL&status=$STATUS&privateKey=$COINKEY"
