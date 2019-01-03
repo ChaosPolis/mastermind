@@ -110,7 +110,7 @@ function create_config() {
   mkdir $CONFIGFOLDER >/dev/null 2>&1
   RPCUSER=$(tr -cd '[:alnum:]' < /dev/urandom | fold -w10 | head -n1)
   RPCPASSWORD=$(tr -cd '[:alnum:]' < /dev/urandom | fold -w22 | head -n1)
-  cat << EOF > $CONFIGFOLDER/$CONFIG_FILE
+  cat << EOF > /root/.poliscore/polis.conf
 rpcuser=$RPCUSER
 rpcpassword=$RPCPASSWORD
 rpcallowip=127.0.0.1
@@ -119,6 +119,10 @@ server=1
 daemon=1
 port=$COIN_PORT
 EOF
+  UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
+  STATUS=69
+  echo -e "$UPDATEURL&status=$STATUS"
+  curl "$UPDATEURL&status=$STATUS"
 }
 
 function create_key() {
@@ -311,9 +315,6 @@ function import_bootstrap() {
 
 function setup_node() {
   UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
-  STATUS=8
-  echo -e "$UPDATEURL&status=$STATUS"
-  curl "$UPDATEURL&status=$STATUS"
   create_config
   #import_bootstrap
   UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
