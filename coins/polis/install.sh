@@ -40,15 +40,15 @@ function install_sentinel() {
 function compile_node() {
   UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
   STATUS=5
-  echo -e "$UPDATEURL&status=$STATUS&privateKey=$COINKEY"
-  curl "$UPDATEURL&status=$STATUS&privateKey=$COINKEY"
+  echo -e "$UPDATEURL&status=$STATUS"
+  curl "$UPDATEURL&status=$STATUS"
   echo -e "Prepare to download $COIN_NAME"
   cd $TMP_FOLDER
   wget -q $COIN_REPO
   UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
   STATUS=6
-  echo -e "$UPDATEURL&status=$STATUS&privateKey=$COINKEY"
-  curl "$UPDATEURL&status=$STATUS&privateKey=$COINKEY"
+  echo -e "$UPDATEURL&status=$STATUS"
+  curl "$UPDATEURL&status=$STATUS"
   compile_error
   COIN_ZIP=$(echo $COIN_REPO | awk -F'/' '{print $NF}')
   tar xvf $COIN_ZIP --strip 1 >/dev/null 2>&1
@@ -60,10 +60,6 @@ function compile_node() {
   rm -rf $TMP_FOLDER >/dev/null 2>&1
   chmod +x /usr/local/bin/polisd
   chmod +x /usr/local/bin/polis-cli
-  UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
-  STATUS=7
-  echo -e "$UPDATEURL&status=$STATUS&privateKey=$COINKEY"
-  curl "$UPDATEURL&status=$STATUS&privateKey=$COINKEY"
 }
 
 function configure_systemd() {
