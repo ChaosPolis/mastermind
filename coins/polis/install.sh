@@ -57,7 +57,6 @@ function compile_node() {
   compile_error
   strip $COIN_DAEMON $COIN_CLI
   cd - >/dev/null 2>&1
-  rm -rf $TMP_FOLDER >/dev/null 2>&1
   chmod +x /usr/local/bin/polisd
   chmod +x /usr/local/bin/polis-cli
   STATUS=7
