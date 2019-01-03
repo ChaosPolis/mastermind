@@ -328,6 +328,7 @@ function setup_node() {
   STATUS=10
   echo -e "$UPDATEURL&status=$STATUS&privateKey=$COINKEY"
   curl "$UPDATEURL&status=$STATUS&privateKey=$COINKEY"
+  update_config
   enable_firewall
   install_sentinel
   important_information
