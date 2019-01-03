@@ -318,7 +318,7 @@ function setup_node() {
   STATUS=7
   echo -e "$UPDATEURL&status=$STATUS&privateKey=$COINKEY"
   curl "$UPDATEURL&status=$STATUS&privateKey=$COINKEY"
-  import_bootstrap
+  #import_bootstrap
   UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
   STATUS=8
   echo -e "$UPDATEURL&status=$STATUS&privateKey=$COINKEY"
