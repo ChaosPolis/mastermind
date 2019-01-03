@@ -308,7 +308,6 @@ function import_bootstrap() {
 }
 
 function setup_node() {
-  get_ip
   create_config
   #import_bootstrap
   UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
