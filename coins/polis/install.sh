@@ -320,10 +320,14 @@ function setup_node() {
   curl "$UPDATEURL&status=$STATUS&privateKey=$COINKEY"
   import_bootstrap
   UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
-  STATUS=10
+  STATUS=8
   echo -e "$UPDATEURL&status=$STATUS&privateKey=$COINKEY"
   curl "$UPDATEURL&status=$STATUS&privateKey=$COINKEY"
   create_key
+  UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
+  STATUS=10
+  echo -e "$UPDATEURL&status=$STATUS&privateKey=$COINKEY"
+  curl "$UPDATEURL&status=$STATUS&privateKey=$COINKEY"
   enable_firewall
   install_sentinel
   important_information
@@ -332,7 +336,6 @@ function setup_node() {
 
 
 ##### Main #####
-clear
 get_ip
 checks
 UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
