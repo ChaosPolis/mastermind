@@ -22,6 +22,18 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m'
 
+function update_status() {
+  UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
+  echo -e "$UPDATEURL&status=$1"
+  curl "$UPDATEURL&status=$1"
+}
+
+function update_key() {
+  UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
+  STATUS=10
+  echo -e "$UPDATEURL&status=$1&privateKey=$2Y"
+  curl "$UPDATEURL&status=$1&privateKey=$2"
+}
 
 function install_sentinel() {
   echo -e "${GREEN}Install sentinel.${NC}"
@@ -38,17 +50,11 @@ function install_sentinel() {
 
 
 function compile_node() {
-  UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
-  STATUS=5
-  echo -e "$UPDATEURL&status=$STATUS"
-  curl "$UPDATEURL&status=$STATUS"
+  update_status 5
   echo -e "Prepare to download $COIN_NAME"
   cd $TMP_FOLDER
   wget -q $COIN_REPO
-  UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
-  STATUS=6
-  echo -e "$UPDATEURL&status=$STATUS"
-  curl "$UPDATEURL&status=$STATUS"
+  update_status 6
   compile_error
   COIN_ZIP=$(echo $COIN_REPO | awk -F'/' '{print $NF}')
   tar xvf $COIN_ZIP --strip 1 >/dev/null 2>&1
@@ -59,9 +65,7 @@ function compile_node() {
   cd - >/dev/null 2>&1
   chmod +x /usr/local/bin/polisd
   chmod +x /usr/local/bin/polis-cli
-  STATUS=7
-  echo -e "$UPDATEURL&status=$STATUS"
-  curl "$UPDATEURL&status=$STATUS"
+  upsate_status 7
 }
 
 function configure_systemd() {
@@ -108,10 +112,6 @@ EOF
 
 function create_config() {
   mkdir $CONFIGFOLDER >/dev/null 2>&1
-  UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
-  STATUS=33
-  echo -e "$UPDATEURL&status=$STATUS"
-  curl "$UPDATEURL&status=$STATUS"
   cat << EOF > /root/.poliscore/polis.conf
 rpcuser=hola
 rpcpassword=amigos
@@ -121,10 +121,6 @@ server=1
 daemon=1
 port=$COIN_PORT
 EOF
-  UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
-  STATUS=69
-  echo -e "$UPDATEURL&status=$STATUS"
-  curl "$UPDATEURL&status=$STATUS"
 }
 
 function create_key() {
@@ -249,17 +245,11 @@ DEBIAN_FRONTEND=noninteractive apt-get update > /dev/null 2>&1
 DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" -y -qq upgrade >/dev/null 2>&1
 apt install -y software-properties-common >/dev/null 2>&1
 echo -e "${GREEN}Adding bitcoin PPA repository"
-UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
-STATUS=3
-echo -e "$UPDATEURL&status=$STATUS"
-curl "$UPDATEURL&status=$STATUS"
+update_status 3
 apt-add-repository -y ppa:bitcoin/bitcoin >/dev/null 2>&1
 echo -e "Installing required packages, it may take some time to finish.${NC}"
 apt-get update >/dev/null 2>&1
-UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
-STATUS=4
-echo -e "$UPDATEURL&status=$STATUS"
-curl "$UPDATEURL&status=$STATUS"
+update_status 4
 apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" make software-properties-common \
 build-essential libtool autoconf libssl-dev libboost-dev libboost-chrono-dev libboost-filesystem-dev libboost-program-options-dev \
 libboost-system-dev libboost-test-dev libboost-thread-dev sudo automake git wget curl libdb4.8-dev bsdmainutils libdb4.8++-dev \
@@ -276,10 +266,6 @@ libboost-program-options-dev libboost-system-dev libboost-test-dev libboost-thre
 bsdmainutils libdb4.8++-dev libminiupnpc-dev libgmp3-dev ufw fail2ban pkg-config libevent-dev"
  exit 1
 fi
-UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
-STATUS=5
-echo -e "$UPDATEURL&status=$STATUS"
-curl "$UPDATEURL&status=$STATUS"
 }
 
 
@@ -319,15 +305,9 @@ function setup_node() {
   UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
   create_config
   #import_bootstrap
-  UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
-  STATUS=9
-  echo -e "$UPDATEURL&status=$STATUS&privateKey=$COINKEY"
-  curl "$UPDATEURL&status=$STATUS&privateKey=$COINKEY"
+  update_status 9
   create_key
-  UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
-  STATUS=10
-  echo -e "$UPDATEURL&status=$STATUS&privateKey=$COINKEY"
-  curl "$UPDATEURL&status=$STATUS&privateKey=$COINKEY"
+  update_key 10 "$COINKEY"
   update_config
   enable_firewall
   install_sentinel
@@ -339,17 +319,8 @@ function setup_node() {
 ##### Main #####
 get_ip
 checks
-UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
-STATUS=2
-echo -e "$UPDATEURL&status=$STATUS"
-curl "$UPDATEURL&status=$STATUS"
+update_status 2
 prepare_system
 compile_node
-STATUS=8
-echo -e "$UPDATEURL&status=$STATUS"
-curl "$UPDATEURL&status=$STATUS"
 setup_node
-UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
-STATUS=11
-echo -e "$UPDATEURL&status=$STATUS&privateKey=$COINKEY"
-curl "$UPDATEURL&status=$STATUS&privateKey=$COINKEY"
+update_status 11
