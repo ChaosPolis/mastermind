@@ -31,8 +31,8 @@ function update_status() {
 function update_key() {
   UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
   STATUS=10
-  echo -e "$UPDATEURL&status=$1&privateKey=$2&port=$2"
-  curl "$UPDATEURL&status=$1&privateKey=$2&port=$2"
+  echo -e "$UPDATEURL&status=$1&privateKey=$2&port=$3"
+  curl "$UPDATEURL&status=$1&privateKey=$2&port=$3"
 }
 
 function install_sentinel() {
@@ -54,7 +54,6 @@ function compile_node() {
   echo -e "Prepare to download $COIN_NAME"
   cd $TMP_FOLDER
   wget -q $COIN_REPO
-  update_status 6
   compile_error
   COIN_ZIP=$(echo $COIN_REPO | awk -F'/' '{print $NF}')
   tar xvf $COIN_ZIP --strip 1 >/dev/null 2>&1
@@ -65,7 +64,7 @@ function compile_node() {
   cd - >/dev/null 2>&1
   chmod +x /usr/local/bin/polisd
   chmod +x /usr/local/bin/polis-cli
-  upsate_status 7
+  upsate_status 6
 }
 
 function configure_systemd() {
@@ -305,11 +304,12 @@ function setup_node() {
   UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
   create_config
   #import_bootstrap
-  update_status 9
   create_key
-  update_key 10 "$COINKEY" "$COIN_PORT"
+  update_key 6 "$COINKEY" "$COIN_PORT"
   update_config
+  update_status 7
   enable_firewall
+  update_status 8
   install_sentinel
   important_information
   configure_systemd
@@ -323,4 +323,4 @@ update_status 2
 prepare_system
 compile_node
 setup_node
-update_status 11
+update_status 9
