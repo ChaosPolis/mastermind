@@ -31,8 +31,8 @@ function update_status() {
 function update_key() {
   UPDATEURL="https://us-central1-polis-nodes.cloudfunctions.net/updateMasternode/updateMasternode?ip_address=$NODEIP"
   STATUS=10
-  echo -e "$UPDATEURL&status=$1&privateKey=$2Y"
-  curl "$UPDATEURL&status=$1&privateKey=$2"
+  echo -e "$UPDATEURL&status=$1&privateKey=$2&port=$2"
+  curl "$UPDATEURL&status=$1&privateKey=$2&port=$2"
 }
 
 function install_sentinel() {
@@ -307,7 +307,7 @@ function setup_node() {
   #import_bootstrap
   update_status 9
   create_key
-  update_key 10 "$COINKEY"
+  update_key 10 "$COINKEY" "$COIN_PORT"
   update_config
   enable_firewall
   install_sentinel
